@@ -53,9 +53,7 @@ chown -R vsoc_user:vsoc_user /home/vsoc_user
 # - cvd-host_package.tar.gz
 # - aosp_cf_arm64_phone-img-*.zip (atau target image lainnya)
 RUN wget -q https://ci.android.com/builds/submitted/14818820/aosp_cf_arm64_only_phone-userdebug/latest/cvd-host_package.tar.gz \
-&& wget -q https://ci.android.com/builds/submitted/14818820/aosp_cf_arm64_only_phone-userdebug/latest/aosp_cf_arm64_only_phone-img-14818820.zip \
-&& mv cvd-host_package.tar.gz /home/vsoc_user \
-&& mv aosp_cf_arm64_only_phone-img-14818820.zip /bome/vsoc_user/aosp_cf_arm64_phone-img.zip
+&& wget -q https://ci.android.com/builds/submitted/14818820/aosp_cf_arm64_only_phone-userdebug/latest/aosp_cf_arm64_only_phone-img-14818820.zip -O aosp_cf_arm64_phone-img.zip 
 #COPY --chown=vsoc_user:vsoc_user cvd-host_package.tar.gz /home/vsoc_user/
 #COPY --chown=vsoc_user:vsoc_user aosp_cf_arm64_phone-img.zip /home/vsoc_user/
 
