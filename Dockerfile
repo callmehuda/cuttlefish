@@ -26,21 +26,17 @@ iptables \
 dnsmasq \
 bridge-utils \
 # Build tools (jika perlu compile)
-build-essential >/dev/null \
+build-essential \
 && rm -rf /var/lib/apt/lists/*
 
-# Download dan install Cuttlefish host packages dari Google
-# Cek versi terbaru di: https://github.com/google/android-cuttlefish/releases
-ARG CF_VERSION=1.0.0
-ARG CF_ARCH=arm64
+RUN curl -fsSL https://us-apt.pkg.dev/doc/repo-signing-key.gpg \
+-o /etc/apt/trusted.gpg.d/artifact-registry.asc
+RUN chmod a+r /etc/apt/trusted.gpg.d/artifact-registry.asc
+RUN echo "deb https://us-apt.pkg.dev/projects/android-cuttlefish-artifacts android-cuttlefish main" \
+| tee -a /etc/apt/sources.list.d/artifact-registry.list
+RUN sudo apt update
 
-RUN wget -q https://github.com/google/android-cuttlefish/releases/download/v${CF_VERSION}/cuttlefish-base_${CF_VERSION}_${CF_ARCH}.deb \
-https://github.com/google/android-cuttlefish/releases/download/v${CF_VERSION}/cuttlefish-user_${CF_VERSION}_${CF_ARCH}.deb \
-&& apt-get install -y \
-./cuttlefish-base_${CF_VERSION}_${CF_ARCH}.deb \
-./cuttlefish-user_${CF_VERSION}_${CF_ARCH}.deb \
-&& rm -f *.deb \
-&& rm -rf /var/lib/apt/lists/*
+RUN sudo apt install cuttlefish-base cuttlefish-user cuttlefish-orchestration
 
 # Buat user 'cuttlefish' dan tambahkan ke grup yang diperlukan
 RUN useradd -m -s /bin/bash vsoc_user \
@@ -56,10 +52,10 @@ chown -R vsoc_user:vsoc_user /home/vsoc_user
 # Kamu perlu menyediakan file-file ini dari AOSP build atau CI artifacts:
 # - cvd-host_package.tar.gz
 # - aosp_cf_arm64_phone-img-*.zip (atau target image lainnya)
-RUN wget https://ci.android.com/builds/submitted/14818820/aosp_cf_arm64_only_phone-userdebug/latest/cvd-host_package.tar.gz 
-RUN wget https://ci.android.com/builds/submitted/14818820/aosp_cf_arm64_only_phone-userdebug/latest/aosp_cf_arm64_only_phone-img-14818820.zip 
-RUN mv cvd-host_package.tar.gz /home/vsoc_user 
-RUN mv aosp_cf_arm64_only_phone-img-14818820.zip /bome/vsoc_user/aosp_cf_arm64_phone-img.zip
+RUN wget -q https://ci.android.com/builds/submitted/14818820/aosp_cf_arm64_only_phone-userdebug/latest/cvd-host_package.tar.gz \
+&& wget -q https://ci.android.com/builds/submitted/14818820/aosp_cf_arm64_only_phone-userdebug/latest/aosp_cf_arm64_only_phone-img-14818820.zip \
+&& mv cvd-host_package.tar.gz /home/vsoc_user \
+&& mv aosp_cf_arm64_only_phone-img-14818820.zip /bome/vsoc_user/aosp_cf_arm64_phone-img.zip
 #COPY --chown=vsoc_user:vsoc_user cvd-host_package.tar.gz /home/vsoc_user/
 #COPY --chown=vsoc_user:vsoc_user aosp_cf_arm64_phone-img.zip /home/vsoc_user/
 
