@@ -1,2 +1,2 @@
-# cuttlefish
-cuttlefish virtual device running on github action
+# Genymotion
+Genymotion SaaS running on github action
