@@ -59,7 +59,7 @@ RUN wget -q https://ci.android.com/builds/submitted/14818820/aosp_cf_arm64_only_
 
 # Extract artifacts
 USER vsoc_user
-RUN tar -xzf cvd-host_package.tar.gz -C /home/vsoc_user/ \
+RUN tar -xf cvd-host_package.tar.gz -C /home/vsoc_user/ \
 && unzip aosp_cf_arm64_phone-img.zip -d /home/vsoc_user/ \
 && rm -f cvd-host_package.tar.gz aosp_cf_arm64_phone-img.zip
 
