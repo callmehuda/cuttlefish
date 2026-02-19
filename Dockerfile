@@ -36,7 +36,7 @@ RUN echo "deb https://us-apt.pkg.dev/projects/android-cuttlefish-artifacts andro
 | tee -a /etc/apt/sources.list.d/artifact-registry.list
 RUN apt update
 
-RUN apt install cuttlefish-base cuttlefish-user cuttlefish-orchestration
+RUN apt install cuttlefish-base cuttlefish-user cuttlefish-orchestration -y
 
 # Buat user 'cuttlefish' dan tambahkan ke grup yang diperlukan
 RUN useradd -m -s /bin/bash vsoc_user \
