@@ -1,0 +1,49 @@
+name: ssh
+
+on:
+  push:
+    branches: "main"
+  workflow_dispatch:       
+
+permissions:
+  contents: write
+
+jobs:
+  run-script:
+    runs-on: ubuntu-24.04-arm
+    steps:
+      - name: clone repo locally
+        uses: actions/checkout@v4
+
+
+      - name: Install Cloudflared
+        run: |       
+          # Add cloudflare gpg key
+          sudo mkdir -p --mode=0755 /usr/share/keyrings
+          curl -fsSL https://pkg.cloudflare.com/cloudflare-main.gpg | sudo tee /usr/share/keyrings/cloudflare-main.gpg >/dev/null
+
+          # Add this repo to your apt repositories
+          echo 'deb [signed-by=/usr/share/keyrings/cloudflare-main.gpg] https://pkg.cloudflare.com/cloudflared any main' | sudo tee /etc/apt/sources.list.d/cloudflared.list
+
+          # install cloudflared
+          sudo apt-get update && sudo apt-get install cloudflared
+
+      - name: Setup Cloudflared
+        run: |
+          #sudo cloudflared service install eyJhIjoiOWFjMWUxOTExMmU5ZWZmZDIzNmFlNDk1NDIyYmY2ZjgiLCJ0IjoiOTFhZjIzOWQtMDA1My00YjhhLWE2ZTItYjFkODhhNGU3YWM0IiwicyI6Ik1ETTROekZqTWpBdE5EazJZUzAwTTJZekxUbGtOVGd0WWpCbFltWXhNMk5tTVdFMSJ9
+          cloudflared tunnel run --token eyJhIjoiOWFjMWUxOTExMmU5ZWZmZDIzNmFlNDk1NDIyYmY2ZjgiLCJ0IjoiZDBiMjI1MTItNmE1OC00MmZkLTk5MTMtNzYxMjczYWUzN2YwIiwicyI6Ik5qRmhZalU0Wm1RdE1HUTNNUzAwTlRKaExUa3lNbVF0TUROak16TXpOakJsWXpNeiJ9 &
+
+      - name: Run sshd
+        run: |
+          sudo apt install openssh-server -y        
+          echo 'runner:mypasswd' | sudo chpasswd
+          echo -e "Port 22\nListenAddress 0.0.0.0" | sudo tee /etc/ssh/sshd_config
+          sudo ssh-keygen -A
+          sudo mkdir -p /run/sshd
+          sudo chmod 755 /run/sshd
+          sudo /usr/sbin/sshd 
+      
+      - name: build and run docker
+        run: |
+          docker build -t cuttlefish-arm64 .
+          docker compose up
