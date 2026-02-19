@@ -1,4 +1,4 @@
-FROM --platform=linux/arm64 ubuntu:22.04
+FROM ubuntu:24.04
 
 # Hindari interaksi saat instalasi paket
 ENV DEBIAN_FRONTEND=noninteractive
