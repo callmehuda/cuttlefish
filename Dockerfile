@@ -34,9 +34,9 @@ RUN curl -fsSL https://us-apt.pkg.dev/doc/repo-signing-key.gpg \
 RUN chmod a+r /etc/apt/trusted.gpg.d/artifact-registry.asc
 RUN echo "deb https://us-apt.pkg.dev/projects/android-cuttlefish-artifacts android-cuttlefish main" \
 | tee -a /etc/apt/sources.list.d/artifact-registry.list
-RUN sudo apt update
+RUN apt update
 
-RUN sudo apt install cuttlefish-base cuttlefish-user cuttlefish-orchestration
+RUN apt install cuttlefish-base cuttlefish-user cuttlefish-orchestration
 
 # Buat user 'cuttlefish' dan tambahkan ke grup yang diperlukan
 RUN useradd -m -s /bin/bash vsoc_user \
