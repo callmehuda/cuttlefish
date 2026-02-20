@@ -8,7 +8,9 @@ services:
     container_name: cuttlefish_device
     privileged: true          # Dibutuhkan untuk KVM & kernel modules
     devices:
-      - /dev/kvm:/dev/kvm     # Akses KVM untuk akselerasi hardware
+      - /dev/kvm:/dev/kvm # Akses KVM untuk akselerasi hardware
+      - /dev/vhost-vsock:/dev/vhost-vsock
+      - /dev/vhost-net:/dev/vhost-net
     volumes:
       - cuttlefish-data:/home/vsoc_user/cvd-home
     ports:
