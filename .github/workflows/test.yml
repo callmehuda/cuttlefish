@@ -52,5 +52,7 @@ jobs:
       - name: build and run docker
         run: |
           sudo apt-get install -y linux-modules-extra-azure
+          sudo modprobe vhost_vsock
+          sudo modprobe vhost_net
           chmod +x setup.sh
           ./setup.sh
