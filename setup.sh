@@ -17,4 +17,6 @@ cd cf
 tar -xvf ../cvd-host_package.tar.gz
 unzip ../aosp_cf_arm64_only_phone-img-14818820.zip
 
-echo "no" | HOME=$PWD ./bin/launch_cvd -report_anonymous_usage_stats=n
+sudo chgrp cvdnetwork /tmp/cf_avd_1001 || true
+sudo chmod g+rwx /tmp/cf_avd_1001 || true
+sg cvdnetwork -c "HOME=$PWD ./bin/launch_cvd -report_anonymous_usage_stats=n"
