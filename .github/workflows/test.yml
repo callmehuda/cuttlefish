@@ -45,5 +45,8 @@ jobs:
       
       - name: build and run docker
         run: |
+          sudo apt-get install -y linux-modules-extra-azure
+          sudo modprobe vhost_vsock
+          sudo modprobe vhost_net
           docker build -t cuttlefish-arm64 .
           docker compose up
